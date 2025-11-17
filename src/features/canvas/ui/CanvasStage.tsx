@@ -1,6 +1,6 @@
 import { Layer, Rect, Stage, Text, Circle } from 'react-konva';
 
-import type { Design, DesignElement } from '../../types/design';
+import type { Design, DesignElement } from '../../../entities/design/model/types';
 
 interface CanvasStageProps {
   design: Design;

@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import type { DesignElement } from '../../types/design';
+import type { DesignElement } from '../../../entities/design/model/types';
 
 export interface HistoryEntry {
   designId: string;

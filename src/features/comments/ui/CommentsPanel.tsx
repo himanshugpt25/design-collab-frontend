@@ -1,18 +1,17 @@
 import { useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
 
-import { useAddCommentMutation, useGetCommentsQuery } from '../../api/commentsApi';
-import type { Comment } from '../../types/comment';
+import { useAddCommentMutation, useGetCommentsQuery } from '../api/commentsApi';
+import type { Comment } from '../../../entities/comment/model/types';
+import { env } from '../../../shared/config/env';
 
 interface CommentsPanelProps {
   designId: string;
 }
 
-const isApiConfigured = Boolean(import.meta.env.VITE_API_URL);
-
 export const CommentsPanel = ({ designId }: CommentsPanelProps) => {
   const { data, isFetching } = useGetCommentsQuery(designId, {
-    skip: !isApiConfigured || !designId,
+    skip: !env.isApiConfigured || !designId,
   });
   const [addComment, { isLoading }] = useAddCommentMutation();
   const [message, setMessage] = useState('');
@@ -31,7 +30,7 @@ export const CommentsPanel = ({ designId }: CommentsPanelProps) => {
 
     setMessage('');
 
-    if (isApiConfigured) {
+    if (env.isApiConfigured) {
       try {
         await addComment({ designId, body: optimisticComment }).unwrap();
       } catch {
@@ -44,7 +43,7 @@ export const CommentsPanel = ({ designId }: CommentsPanelProps) => {
     <section className="flex h-full flex-col rounded-2xl border border-slate-800 bg-slate-900/70">
       <header className="border-b border-slate-800 px-4 py-3">
         <p className="text-sm font-semibold uppercase tracking-widest text-slate-400">Comments</p>
-        {!isApiConfigured && (
+        {!env.isApiConfigured && (
           <p className="text-xs text-amber-400">
             Set <code className="font-mono">VITE_API_URL</code> to enable live data.
           </p>

@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
+
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { env } from '../../../shared/config/env';
+import { upsertDesign, setActiveDesignId } from '../../../entities/design/model/slice';
+import type { Design } from '../../../entities/design/model/types';
 import { useGetDesignsQuery } from '../api/designsApi';
-import { setActiveDesignId, upsertDesign } from '../features/design/designSlice';
-import type { Design } from '../types/design';
 
-const isApiConfigured = Boolean(import.meta.env.VITE_API_URL);
-
-export const DesignListPage = () => {
+export const DesignList = () => {
   const dispatch = useAppDispatch();
   const { data, isFetching } = useGetDesignsQuery(undefined, {
-    skip: !isApiConfigured,
+    skip: !env.isApiConfigured,
   });
   const designs = useAppSelector((state) => state.design.items);
   const activeDesignId = useAppSelector((state) => state.design.activeDesignId);
@@ -54,7 +54,7 @@ export const DesignListPage = () => {
           New design
         </button>
       </header>
-      {isFetching && isApiConfigured && (
+      {isFetching && env.isApiConfigured && (
         <p className="text-xs text-slate-500">Syncing with API…</p>
       )}
       <div className="grid gap-4 md:grid-cols-2">

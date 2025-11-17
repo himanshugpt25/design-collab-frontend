@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-interface CollaboratorPresence {
+export interface CollaboratorPresence {
   id: string;
   name: string;
   color: string;

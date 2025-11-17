@@ -1,16 +1,7 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { Comment } from '../../../entities/comment/model/types';
+import { baseApi } from '../../../shared/api/baseApi';
 
-import type { Comment } from '../types/comment';
-
-const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000/api';
-
-export const commentsApi = createApi({
-  reducerPath: 'commentsApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: BASE_URL,
-    credentials: 'include',
-  }),
-  tagTypes: ['Comment', 'CommentList'],
+export const commentsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getComments: builder.query<Comment[], string>({
       query: (designId) => `/designs/${designId}/comments`,

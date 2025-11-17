@@ -1,26 +1,35 @@
-import { useMemo, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { useRealtime } from '../../hooks/useRealtime';
-import { CanvasStage } from './CanvasStage';
-import { CommentsPanel } from './CommentsPanel';
-import { LayersPanel } from './LayersPanel';
-import { PropertiesPanel } from './PropertiesPanel';
-import { TopBar } from './TopBar';
-import { redo, undo } from '../design/historySlice';
+import { useEffect, useState } from 'react';
 
-export const EditorPage = () => {
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { selectActiveDesign } from '../../../entities/design/model/selectors';
+import { CanvasStage } from '../../canvas/ui/CanvasStage';
+import { LayersPanel } from '../../canvas/ui/LayersPanel';
+import { PropertiesPanel } from '../../canvas/ui/PropertiesPanel';
+import { TopBar } from '../../canvas/ui/TopBar';
+import { useCanvasRealtime } from '../../canvas/hooks/useCanvasRealtime';
+import { CommentsPanel } from '../../comments/ui/CommentsPanel';
+import { redo, undo } from '../../canvas/model/historySlice';
+
+export const EditorLayout = () => {
   const dispatch = useAppDispatch();
-  const { items, activeDesignId } = useAppSelector((state) => state.design);
   const collaborators = useAppSelector((state) => state.presence.collaborators);
-  const activeDesign = useMemo(
-    () => items.find((design) => design._id === activeDesignId),
-    [items, activeDesignId]
-  );
+  const activeDesign = useAppSelector(selectActiveDesign);
   const [selectedElementId, setSelectedElementId] = useState<string | undefined>(
     activeDesign?.elements[0]?.id
   );
 
-  useRealtime(activeDesign?._id);
+  useCanvasRealtime(activeDesign?._id);
+
+  useEffect(() => {
+    if (!activeDesign) {
+      setSelectedElementId(undefined);
+      return;
+    }
+    const hasSelectedElement = activeDesign.elements.some((el) => el.id === selectedElementId);
+    if (!hasSelectedElement) {
+      setSelectedElementId(activeDesign.elements[0]?.id);
+    }
+  }, [activeDesign, selectedElementId]);
 
   if (!activeDesign) {
     return (
@@ -108,4 +117,3 @@ export const EditorPage = () => {
     </section>
   );
 };
-

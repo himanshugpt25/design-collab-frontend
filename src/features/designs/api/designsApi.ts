@@ -1,16 +1,7 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { Design } from '../../../entities/design/model/types';
+import { baseApi } from '../../../shared/api/baseApi';
 
-import type { Design } from '../types/design';
-
-const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000/api';
-
-export const designsApi = createApi({
-  reducerPath: 'designsApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: BASE_URL,
-    credentials: 'include',
-  }),
-  tagTypes: ['Design', 'DesignList'],
+export const designsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getDesigns: builder.query<Design[], void>({
       query: () => '/designs',

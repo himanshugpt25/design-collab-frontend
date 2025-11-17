@@ -1,22 +1,20 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
-import { commentsApi } from '../api/commentsApi';
-import { designsApi } from '../api/designsApi';
-import historyReducer from '../features/design/historySlice';
-import presenceReducer from '../features/design/presenceSlice';
-import designReducer from '../features/design/designSlice';
+import designReducer from '../entities/design/model/slice';
+import historyReducer from '../features/canvas/model/historySlice';
+import presenceReducer from '../features/canvas/model/presenceSlice';
+import { baseApi } from '../shared/api/baseApi';
 
 export const store = configureStore({
   reducer: {
-    [designsApi.reducerPath]: designsApi.reducer,
-    [commentsApi.reducerPath]: commentsApi.reducer,
+    [baseApi.reducerPath]: baseApi.reducer,
     design: designReducer,
     history: historyReducer,
     presence: presenceReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(designsApi.middleware, commentsApi.middleware),
+    getDefaultMiddleware().concat(baseApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

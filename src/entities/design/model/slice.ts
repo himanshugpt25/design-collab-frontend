@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import type { Design, DesignElement } from '../../types/design';
+import type { Design, DesignElement } from './types';
 
 interface DesignState {
   items: Design[];
